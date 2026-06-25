@@ -79,4 +79,10 @@ public class TicketServiceImpl implements TicketService {
         return ticketMapper.toResponse(ticket);
     }
 
+    @Override
+    public Ticket getTicketById(Long id) {
+        return ticketRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Ticket not found"));
+    }
+
 }

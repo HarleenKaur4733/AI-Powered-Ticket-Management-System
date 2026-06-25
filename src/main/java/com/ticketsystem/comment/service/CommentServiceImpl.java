@@ -13,9 +13,9 @@ import com.ticketsystem.comment.entity.Comment;
 import com.ticketsystem.comment.mapper.CommentMapper;
 import com.ticketsystem.comment.repository.CommentRepository;
 import com.ticketsystem.ticket.entity.Ticket;
-import com.ticketsystem.ticket.repository.TicketRepository;
+import com.ticketsystem.ticket.service.TicketService;
 import com.ticketsystem.user.entity.User;
-import com.ticketsystem.user.repository.UserRepository;
+import com.ticketsystem.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,8 +25,10 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
-    private final TicketRepository ticketRepository;
-    private final UserRepository userRepository;
+    // private final TicketRepository ticketRepository;
+    // private final UserRepository userRepository;
+    private final TicketService ticketService;
+    private final UserService userService;
 
     @Override
     @Transactional
@@ -34,11 +36,9 @@ public class CommentServiceImpl implements CommentService {
             Long userId,
             CreateCommentRequest request) {
 
-        Ticket ticket = ticketRepository.findById(ticketId)
-                .orElseThrow(() -> new IllegalArgumentException("Ticket not found"));
+        Ticket ticket = ticketService.getTicketById(ticketId);
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        User user = userService.getUserById(userId);
 
         Comment comment = commentMapper.toEntity(request);
 
