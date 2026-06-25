@@ -72,11 +72,10 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public TicketResponse deleteTicket(Long id) {
-        Ticket ticket = ticketRepository.findById(id)
+    public void deleteTicket(Long id) {
+        ticketRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Ticket not found"));
         ticketRepository.deleteById(id);
-        return ticketMapper.toResponse(ticket);
     }
 
     @Override

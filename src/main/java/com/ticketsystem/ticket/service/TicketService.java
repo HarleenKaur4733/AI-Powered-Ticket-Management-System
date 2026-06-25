@@ -20,6 +20,6 @@ public interface TicketService {
 
     TicketResponse updateTicket(Long id, UpdateTicketRequest request);
 
-    TicketResponse deleteTicket(Long id);
+    void deleteTicket(Long id);
 
 }
