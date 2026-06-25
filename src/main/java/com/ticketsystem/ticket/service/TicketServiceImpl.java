@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.ticketsystem.exception.ResourceNotFoundException;
 import com.ticketsystem.ticket.dto.CreateTicketRequest;
 import com.ticketsystem.ticket.dto.TicketResponse;
 import com.ticketsystem.ticket.dto.UpdateTicketRequest;
@@ -12,7 +13,6 @@ import com.ticketsystem.ticket.entity.TicketStatus;
 import com.ticketsystem.ticket.mapper.TicketMapper;
 import com.ticketsystem.ticket.repository.TicketRepository;
 import com.ticketsystem.user.entity.User;
-import com.ticketsystem.user.repository.UserRepository;
 import com.ticketsystem.user.service.UserService;
 
 import lombok.AllArgsConstructor;
@@ -43,7 +43,7 @@ public class TicketServiceImpl implements TicketService {
     public TicketResponse getTicket(Long id) {
 
         Ticket ticket = ticketRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Ticket not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket not found"));
 
         return ticketMapper.toResponse(ticket);
     }
@@ -59,7 +59,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public TicketResponse updateTicket(Long id, UpdateTicketRequest request) {
         Ticket ticket = ticketRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Ticket not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket not found"));
         ticket.setPriority(request.getPriority());
         ticket.setStatus(request.getStatus());
         User assignedUser = userService.getUserById(request.getAssignedToUserId());
@@ -74,7 +74,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public TicketResponse deleteTicket(Long id) {
         Ticket ticket = ticketRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Ticket not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket not found"));
         ticketRepository.deleteById(id);
         return ticketMapper.toResponse(ticket);
     }
@@ -82,7 +82,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public Ticket getTicketById(Long id) {
         return ticketRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Ticket not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket not found"));
     }
 
 }

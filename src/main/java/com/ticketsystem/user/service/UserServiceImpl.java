@@ -1,5 +1,6 @@
 package com.ticketsystem.user.service;
 
+import com.ticketsystem.exception.ResourceNotFoundException;
 import com.ticketsystem.user.dto.RegisterRequest;
 import com.ticketsystem.user.dto.UserResponse;
 import com.ticketsystem.user.entity.User;
@@ -29,7 +30,7 @@ public class UserServiceImpl implements UserService {
     public User getUserById(Long id) {
         // Implementation to retrieve user by ID
         return userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
 }
