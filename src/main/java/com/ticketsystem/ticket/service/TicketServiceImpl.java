@@ -15,9 +15,9 @@ import com.ticketsystem.ticket.repository.TicketRepository;
 import com.ticketsystem.user.entity.User;
 import com.ticketsystem.user.service.UserService;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class TicketServiceImpl implements TicketService {
 
@@ -60,10 +60,17 @@ public class TicketServiceImpl implements TicketService {
     public TicketResponse updateTicket(Long id, UpdateTicketRequest request) {
         Ticket ticket = ticketRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Ticket not found"));
-        ticket.setPriority(request.getPriority());
-        ticket.setStatus(request.getStatus());
-        User assignedUser = userService.getUserById(request.getAssignedToUserId());
-        ticket.setAssignedTo(assignedUser);
+
+        if (request.getPriority() != null) {
+            ticket.setPriority(request.getPriority());
+        }
+        if (request.getStatus() != null) {
+            ticket.setStatus(request.getStatus());
+        }
+        if (request.getAssignedToUserId() != null) {
+            User assignedUser = userService.getUserById(request.getAssignedToUserId());
+            ticket.setAssignedTo(assignedUser);
+        }
 
         Ticket updatedTicket = ticketRepository.save(ticket);
 

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,49 +26,49 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TicketController {
 
-    private final TicketService ticketService;
+        private final TicketService ticketService;
 
-    @PostMapping
-    public ResponseEntity<TicketResponse> createTicket(
-            @RequestBody CreateTicketRequest request) {
+        @PostMapping
+        public ResponseEntity<TicketResponse> createTicket(
+                        @RequestBody CreateTicketRequest request) {
 
-        TicketResponse response = ticketService.createTicket(request);
+                TicketResponse response = ticketService.createTicket(request);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(response);
-    }
+                return ResponseEntity.status(HttpStatus.CREATED)
+                                .body(response);
+        }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<TicketResponse> getTicket(
-            @PathVariable Long id) {
+        @GetMapping("/{id}")
+        public ResponseEntity<TicketResponse> getTicket(
+                        @PathVariable Long id) {
 
-        return ResponseEntity.ok(
-                ticketService.getTicket(id));
-    }
+                return ResponseEntity.ok(
+                                ticketService.getTicket(id));
+        }
 
-    @GetMapping
-    public ResponseEntity<Page<TicketResponse>> getAllTickets(
-            Pageable pageable) {
+        @GetMapping
+        public ResponseEntity<Page<TicketResponse>> getAllTickets(
+                        Pageable pageable) {
 
-        return ResponseEntity.ok(
-                ticketService.getAllTickets(pageable));
-    }
+                return ResponseEntity.ok(
+                                ticketService.getAllTickets(pageable));
+        }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<TicketResponse> updateTicket(
-            @PathVariable Long id,
-            @RequestBody UpdateTicketRequest request) {
+        @PatchMapping("/{id}")
+        public ResponseEntity<TicketResponse> updateTicket(
+                        @PathVariable Long id,
+                        @RequestBody UpdateTicketRequest request) {
 
-        return ResponseEntity.ok(
-                ticketService.updateTicket(id, request));
-    }
+                return ResponseEntity.ok(
+                                ticketService.updateTicket(id, request));
+        }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTicket(
-            @PathVariable Long id) {
+        @DeleteMapping("/{id}")
+        public ResponseEntity<Void> deleteTicket(
+                        @PathVariable Long id) {
 
-        ticketService.deleteTicket(id);
+                ticketService.deleteTicket(id);
 
-        return ResponseEntity.noContent().build();
-    }
+                return ResponseEntity.noContent().build();
+        }
 }

@@ -35,8 +35,14 @@ public class TicketMapper {
                 .status(ticket.getStatus())
                 .priority(ticket.getPriority())
                 .createdAt(ticket.getCreatedAt())
-                .createdById(ticket.getCreatedBy().getId())
-                .createdByName(ticket.getCreatedBy().getName())
+                .createdById(
+                        ticket.getCreatedBy() != null
+                                ? ticket.getCreatedBy().getId()
+                                : null)
+                .createdByName(
+                        ticket.getCreatedBy() != null
+                                ? ticket.getCreatedBy().getName()
+                                : null)
                 .assignedToId(ticket.getAssignedTo() != null
                         ? ticket.getAssignedTo().getId()
                         : null)
