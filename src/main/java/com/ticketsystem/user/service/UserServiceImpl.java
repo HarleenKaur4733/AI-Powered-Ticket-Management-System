@@ -1,5 +1,6 @@
 package com.ticketsystem.user.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ticketsystem.exception.ResourceNotFoundException;
@@ -18,12 +19,15 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserResponse register(RegisterRequest request) {
         // Implementation for user registration
         User user = userMapper.toEntity(request);
         user.setRole(Role.USER); // Set default role to USER);
+        user.setPassword(
+                passwordEncoder.encode(request.getPassword()));
         // Save user to database
         User savedUser = userRepository.save(user);
         return userMapper.toResponse(savedUser);
