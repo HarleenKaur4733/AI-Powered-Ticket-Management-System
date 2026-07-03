@@ -12,6 +12,7 @@ import com.ticketsystem.comment.dto.CreateCommentRequest;
 import com.ticketsystem.comment.entity.Comment;
 import com.ticketsystem.comment.mapper.CommentMapper;
 import com.ticketsystem.comment.repository.CommentRepository;
+import com.ticketsystem.security.SecurityUtils;
 import com.ticketsystem.ticket.entity.Ticket;
 import com.ticketsystem.ticket.service.TicketService;
 import com.ticketsystem.user.entity.User;
@@ -33,12 +34,13 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public CommentResponse addComment(Long ticketId,
-            Long userId,
             CreateCommentRequest request) {
 
         Ticket ticket = ticketService.getTicketById(ticketId);
 
-        User user = userService.getUserById(userId);
+        String email = SecurityUtils.getCurrentUsername();
+
+        User user = userService.getUserByEmail(email);
 
         Comment comment = commentMapper.toEntity(request);
 

@@ -8,11 +8,10 @@ import com.ticketsystem.comment.dto.CreateCommentRequest;
 
 public interface CommentService {
 
-    CommentResponse addComment(Long ticketId,
-            Long userId,
-            CreateCommentRequest request);
+        CommentResponse addComment(Long ticketId,
+                        CreateCommentRequest request);
 
-    Page<CommentResponse> getComments(Long ticketId,
-            Pageable pageable);
+        Page<CommentResponse> getComments(Long ticketId,
+                        Pageable pageable);
 
 }

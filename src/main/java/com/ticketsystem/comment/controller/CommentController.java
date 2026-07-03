@@ -21,17 +21,14 @@ public class CommentController {
 
         @PostMapping
         public ResponseEntity<CommentResponse> addComment(
+
                         @PathVariable Long ticketId,
-                        @RequestParam Long userId,
+
                         @RequestBody CreateCommentRequest request) {
 
-                CommentResponse response = commentService.addComment(
-                                ticketId,
-                                userId,
-                                request);
-
                 return ResponseEntity.status(HttpStatus.CREATED)
-                                .body(response);
+                                .body(commentService.addComment(ticketId,
+                                                request));
         }
 
         @GetMapping

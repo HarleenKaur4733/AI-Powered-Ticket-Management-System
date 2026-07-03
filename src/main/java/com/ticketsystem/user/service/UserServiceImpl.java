@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     public UserResponse register(RegisterRequest request) {
         // Implementation for user registration
         User user = userMapper.toEntity(request);
-        user.setRole(Role.USER); // Set default role to USER);
+        user.setRole(Role.ADMIN); // Set default role to USER);
         user.setPassword(
                 passwordEncoder.encode(request.getPassword()));
         // Save user to database
@@ -40,4 +40,10 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
+    @Override
+    public User getUserByEmail(String email) {
+
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    }
 }

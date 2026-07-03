@@ -2,6 +2,7 @@ package com.ticketsystem.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -39,10 +40,28 @@ public class SecurityConfig {
                         UsernamePasswordAuthenticationFilter.class)
 
                 .authorizeHttpRequests(auth -> auth
+
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/api/users/register")
                         .permitAll()
+
+                        .requestMatchers(HttpMethod.DELETE,
+                                "/api/tickets/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/tickets/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.PUT,
+                                "/api/tickets/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/tickets/*/comments")
+                        .hasAnyRole("USER", "ADMIN")
+
                         .anyRequest()
                         .authenticated())
 
