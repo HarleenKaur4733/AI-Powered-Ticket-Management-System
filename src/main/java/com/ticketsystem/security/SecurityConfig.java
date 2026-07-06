@@ -21,77 +21,74 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final CustomUserDetailsService customUserDetailsService;
+        private final JwtAuthenticationFilter jwtAuthenticationFilter;
+        private final CustomUserDetailsService customUserDetailsService;
 
-    @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http)
-            throws Exception {
+        @Bean
+        SecurityFilterChain securityFilterChain(HttpSecurity http)
+                        throws Exception {
 
-        http
-                .csrf(csrf -> csrf.disable())
+                http.csrf(csrf -> csrf.disable()).sessionManagement(session -> session
+                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                // JWT = Stateless Authentication
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                .authenticationProvider(authenticationProvider())
 
-                .authenticationProvider(authenticationProvider())
+                                .addFilterBefore(jwtAuthenticationFilter,
+                                                UsernamePasswordAuthenticationFilter.class)
 
-                .addFilterBefore(jwtAuthenticationFilter,
-                        UsernamePasswordAuthenticationFilter.class)
+                                .authorizeHttpRequests(auth -> auth
 
-                .authorizeHttpRequests(auth -> auth
+                                                .requestMatchers(
+                                                                "/api/auth/**",
+                                                                "/api/users/register")
+                                                .permitAll()
 
-                        .requestMatchers(
-                                "/api/auth/**",
-                                "/api/users/register")
-                        .permitAll()
+                                                .requestMatchers(HttpMethod.DELETE,
+                                                                "/api/tickets/**")
+                                                .hasRole("ADMIN")
 
-                        .requestMatchers(HttpMethod.DELETE,
-                                "/api/tickets/**")
-                        .hasRole("ADMIN")
+                                                .requestMatchers(HttpMethod.POST,
+                                                                "/api/tickets/**")
+                                                .hasRole("ADMIN")
 
-                        .requestMatchers(HttpMethod.POST,
-                                "/api/tickets/**")
-                        .hasRole("ADMIN")
+                                                .requestMatchers(HttpMethod.PUT,
+                                                                "/api/tickets/**")
+                                                .hasRole("ADMIN")
 
-                        .requestMatchers(HttpMethod.PUT,
-                                "/api/tickets/**")
-                        .hasRole("ADMIN")
+                                                .requestMatchers(HttpMethod.POST,
+                                                                "/api/tickets/*/comments")
+                                                .hasAnyRole("USER", "ADMIN")
 
-                        .requestMatchers(HttpMethod.POST,
-                                "/api/tickets/*/comments")
-                        .hasAnyRole("USER", "ADMIN")
+                                                .anyRequest()
+                                                .authenticated())
 
-                        .anyRequest()
-                        .authenticated())
+                                .httpBasic(Customizer.withDefaults());
 
-                .httpBasic(Customizer.withDefaults());
+                return http.build();
+        }
 
-        return http.build();
-    }
+        @Bean
+        AuthenticationProvider authenticationProvider() {
 
-    @Bean
-    AuthenticationProvider authenticationProvider() {
+                DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
 
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+                provider.setUserDetailsService(customUserDetailsService);
+                provider.setPasswordEncoder(passwordEncoder());
 
-        provider.setUserDetailsService(customUserDetailsService);
-        provider.setPasswordEncoder(passwordEncoder());
+                return provider;
+        }
 
-        return provider;
-    }
+        @Bean
+        AuthenticationManager authenticationManager(
+                        AuthenticationConfiguration configuration)
+                        throws Exception {
 
-    @Bean
-    AuthenticationManager authenticationManager(
-            AuthenticationConfiguration configuration)
-            throws Exception {
+                return configuration.getAuthenticationManager();
+        }
 
-        return configuration.getAuthenticationManager();
-    }
+        @Bean
+        PasswordEncoder passwordEncoder() {
 
-    @Bean
-    PasswordEncoder passwordEncoder() {
-
-        return new BCryptPasswordEncoder();
-    }
+                return new BCryptPasswordEncoder();
+        }
 }
