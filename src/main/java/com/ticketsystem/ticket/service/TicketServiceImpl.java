@@ -1,11 +1,14 @@
 package com.ticketsystem.ticket.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ticketsystem.exception.ResourceNotFoundException;
 import com.ticketsystem.ticket.dto.CreateTicketRequest;
+import com.ticketsystem.ticket.dto.TicketDashboardResponse;
 import com.ticketsystem.ticket.dto.TicketResponse;
 import com.ticketsystem.ticket.dto.UpdateTicketRequest;
 import com.ticketsystem.ticket.entity.Ticket;
@@ -89,6 +92,20 @@ public class TicketServiceImpl implements TicketService {
     public Ticket getTicketById(Long id) {
         return ticketRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Ticket not found"));
+    }
+
+    @Override
+    public List<TicketDashboardResponse> getDashboardTickets() {
+
+        List<Ticket> tickets = ticketRepository.findAllWithAssignedUser();
+
+        return tickets.stream()
+                .map(ticket -> TicketDashboardResponse.builder()
+                        .id(ticket.getId())
+                        .title(ticket.getTitle())
+                        .assignedTo(ticket.getAssignedTo().getName())
+                        .build())
+                .toList();
     }
 
 }

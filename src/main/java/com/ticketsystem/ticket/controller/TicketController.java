@@ -1,5 +1,7 @@
 package com.ticketsystem.ticket.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ticketsystem.ticket.dto.CreateTicketRequest;
+import com.ticketsystem.ticket.dto.TicketDashboardResponse;
 import com.ticketsystem.ticket.dto.TicketResponse;
 import com.ticketsystem.ticket.dto.UpdateTicketRequest;
 import com.ticketsystem.ticket.service.TicketService;
@@ -70,5 +73,12 @@ public class TicketController {
                 ticketService.deleteTicket(id);
 
                 return ResponseEntity.noContent().build();
+        }
+
+        @GetMapping("/dashboard")
+        public ResponseEntity<List<TicketDashboardResponse>> getDashboard() {
+
+                return ResponseEntity.ok(
+                                ticketService.getDashboardTickets());
         }
 }
