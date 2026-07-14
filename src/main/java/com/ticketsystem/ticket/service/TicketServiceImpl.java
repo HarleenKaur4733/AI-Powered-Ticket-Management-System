@@ -2,6 +2,8 @@ package com.ticketsystem.ticket.service;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -42,6 +44,7 @@ public class TicketServiceImpl implements TicketService {
         return ticketMapper.toResponse(newTicket);
     }
 
+    @Cacheable(value = "tickets", key = "#id")
     @Override
     public TicketResponse getTicket(Long id) {
 
@@ -59,6 +62,7 @@ public class TicketServiceImpl implements TicketService {
 
     }
 
+    @CacheEvict(value = "tickets", key = "#id")
     @Override
     public TicketResponse updateTicket(Long id, UpdateTicketRequest request) {
         Ticket ticket = ticketRepository.findById(id)
@@ -81,6 +85,7 @@ public class TicketServiceImpl implements TicketService {
 
     }
 
+    @CacheEvict(value = "tickets", key = "#id")
     @Override
     public void deleteTicket(Long id) {
         ticketRepository.findById(id)
@@ -88,6 +93,7 @@ public class TicketServiceImpl implements TicketService {
         ticketRepository.deleteById(id);
     }
 
+    @Cacheable(value = "tickets", key = "#id")
     @Override
     public Ticket getTicketById(Long id) {
         return ticketRepository.findById(id)
