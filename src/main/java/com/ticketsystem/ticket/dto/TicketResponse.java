@@ -1,5 +1,6 @@
 package com.ticketsystem.ticket.dto;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import com.ticketsystem.ticket.entity.TicketPriority;
@@ -16,7 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TicketResponse {
+public class TicketResponse implements Serializable {
 
     private Long id;
 

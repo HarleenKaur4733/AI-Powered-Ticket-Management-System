@@ -47,7 +47,7 @@ public class TicketServiceImpl implements TicketService {
     @Cacheable(value = "tickets", key = "#id")
     @Override
     public TicketResponse getTicket(Long id) {
-
+        System.out.println("Fetching from Database...");
         Ticket ticket = ticketRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Ticket not found"));
 
@@ -93,7 +93,7 @@ public class TicketServiceImpl implements TicketService {
         ticketRepository.deleteById(id);
     }
 
-    @Cacheable(value = "tickets", key = "#id")
+    @Cacheable(value = "ticketEntities", key = "#id")
     @Override
     public Ticket getTicketById(Long id) {
         return ticketRepository.findById(id)
